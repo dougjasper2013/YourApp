@@ -6,18 +6,28 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct ContentView: View {
+    @StateObject private var viewModel = FirestoreViewModel()
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            List(viewModel.users) { user in
+                Text("\(user.name) - Age: \(user.age)")
+            }
+            
+            Button("Add User") {
+                viewModel.addUser(name: "John Doe", age: Int.random(in: 18...50))
+            }
+            .padding()
         }
-        .padding()
+        .onAppear {
+            viewModel.fetchUsers()
+        }
     }
 }
+
 
 #Preview {
     ContentView()
