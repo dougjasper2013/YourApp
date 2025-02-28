@@ -10,6 +10,8 @@ import FirebaseFirestore
 
 struct ContentView: View {
     @StateObject private var viewModel = FirestoreViewModel()
+    @State private var name: String = ""
+    @State private var age: String = ""
 
     var body: some View {
         VStack {
@@ -17,14 +19,30 @@ struct ContentView: View {
                 Text("\(user.name) - Age: \(user.age)")
             }
             
+            TextField("Enter Name", text: $name)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+
+            TextField("Enter Age", text: $age)
+                .keyboardType(.numberPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+
             Button("Add User") {
-                viewModel.addUser(name: "John Doe", age: Int.random(in: 18...50))
+                if let ageInt = Int(age) {
+                    viewModel.addUser(name: name, age: ageInt)
+                    name = ""
+                    age = ""
+                }
             }
             .padding()
+            .disabled(name.isEmpty || age.isEmpty)
+
         }
         .onAppear {
             viewModel.fetchUsers()
         }
+        .padding()
     }
 }
 
