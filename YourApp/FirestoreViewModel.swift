@@ -39,5 +39,20 @@ class FirestoreViewModel: ObservableObject {
             "age": age
         ])
     }
+
+    func updateUser(id: String, name: String, age: Int) {
+        db.collection("users").document(id).updateData([
+            "name": name,
+            "age": age
+        ])
+    }
+
+    func deleteUser(id: String) {
+        db.collection("users").document(id).delete { error in
+            if let error = error {
+                print("Error deleting user: \(error)")
+            }
+        }
+    }
 }
 
